@@ -11,7 +11,10 @@ const port = process.env.PORT || 4000;
 // Enable all cross-origin requests
 app.use(cors());
 
+app.use(express.static("client/build"));
+
 if (process.env.NODE_ENV === "production") {
+  console.log("modo SSL")
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
 }
 
@@ -157,25 +160,15 @@ app.get("/wows/directors", (req, res) => {
   res.send(getUniqueValuesFromArr(wowArr, "director"));
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
 
-  // Redirect to root in case no path match
-  app.use((req, res, next) => {
-    if (req.path !== "/") {
-      return res.redirect("/");
-    }
-    next();
-  });
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
-} else {
-  app.get("*", (req, res) => {
-    res.redirect("/");
-  });
-}
+app.get("*", (req, res) => {
+  res.redirect("/");
+});
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
