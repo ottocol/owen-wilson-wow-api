@@ -16,6 +16,8 @@
     "express": "^4.17.3",
     "express-sslify": "^1.2.0",
     "heroku-ssl-redirect": "^0.1.1",
-    "lodash.samplesize": "^4.2.0"
+    "js-yaml": "^4.1.0",
+    "lodash.samplesize": "^4.2.0",
+    "swagger-ui-express": "^4.5.0"
   }
 }

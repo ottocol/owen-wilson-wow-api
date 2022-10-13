@@ -11,7 +11,17 @@ const port = process.env.PORT || 4000;
 // Enable all cross-origin requests
 app.use(cors());
 
-app.use(express.static("client/build"));
+
+const swaggerUi = require('swagger-ui-express')
+const jsYaml = require('js-yaml')
+const fs = require('fs')
+
+const openApiDocument = jsYaml.load(
+    fs.readFileSync('openapi.yml', 'utf-8'),
+)
+
+const options = { explorer: true }
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument, options));
 
 if (process.env.NODE_ENV === "production") {
   console.log("modo SSL")
@@ -161,12 +171,10 @@ app.get("/wows/directors", (req, res) => {
 });
 
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
+
 
 app.get("*", (req, res) => {
-  res.redirect("/");
+  res.redirect("/docs");
 });
 
 
